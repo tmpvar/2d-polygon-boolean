@@ -1,0 +1,31 @@
+{
+  "name": "polygon.clip",
+  "version": "0.0.0",
+  "description": "clip a polygon with another",
+  "main": "clip.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tmpvar/polygon.clip.js.git"
+  },
+  "keywords": [
+    "polygon",
+    "geometry",
+    "math",
+    "2d",
+    "clipping"
+  ],
+  "author": "Elijah Insua <tmpvar@gmail.com>",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "polygon": "0.0.4",
+    "vec2": "~1.1.0",
+    "segseg": "~0.2.0"
+  }
+}
