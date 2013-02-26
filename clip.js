@@ -203,3 +203,5 @@ Polygon.prototype.clip = function(clipPoly, type) {
 
   return results;
 };
+
+module.exports = Polygon;

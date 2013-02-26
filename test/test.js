@@ -1,8 +1,6 @@
 var assert = require('assert');
-var Polygon = require('polygon');
+var Polygon = require('../clip');
 var Vec2 = require('vec2');
-
-require('../clip');
 
 var subject = Polygon([
   Vec2(0, 0),
