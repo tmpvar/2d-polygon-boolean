@@ -74,21 +74,6 @@ Node.prototype = {
 // Implementation of the Greiner-Hormann polygon clipping algorithm
 //
 
-var segseg_alpha = function(a, b, c, d) {
-  var i = segseg(a.vec, b.vec, c.vec, d.vec)
-
-  if (!i || i===true) {
-    return;
-  } else {
-    var vec = Vec2.fromArray(i);
-
-    return {
-      intersection: vec,
-      alpha_q : a.vec.distance(vec) / a.vec.distance(b.vec),
-      alpha_p : c.vec.distance(vec) / c.vec.distance(d.vec)
-    }
-  }
-};
 
 Polygon.prototype.createLinkedList = function() {
   var ret, where;
@@ -128,12 +113,18 @@ Polygon.prototype.clip = function(clipPoly, type) {
       for(clip = clipList; clip.next; clip = clip.next) {
         if(!clip.intersect) {
 
-          var i = segseg_alpha(subject, subject.next.nextNonIntersection(), clip, clip.next.nextNonIntersection());
+          var a = subject.vec,
+              b = subject.next.nextNonIntersection().vec,
+              c = clip.vec,
+              d = clip.next.nextNonIntersection().vec;
 
-          if(i) {
+          var i = segseg(a, b, c, d);
 
-            var intersectionSubject = new Node(i.intersection, i.alpha_p, true);
-            var intersectionClip = new Node(i.intersection, i.alpha_q, true);
+          if(i && i !== true) {
+            i = Vec2.fromArray(i);
+
+            var intersectionSubject = new Node(i.clone(), a.distance(i) / a.distance(b), true);
+            var intersectionClip = new Node(i.clone(), c.distance(i) / c.distance(d), true);
             intersectionSubject.neighbor = intersectionClip;
             intersectionClip.neighbor = intersectionSubject;
             intersectionSubject.insertBetween(subject, subject.next.nextNonIntersection());
