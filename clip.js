@@ -91,15 +91,8 @@ Polygon.prototype.createLinkedList = function() {
   return ret;
 };
 
-Polygon.prototype.clip = function(clipPoly, type) {
-  var subjectList = this.createLinkedList(),
-      clipList = clipPoly.createLinkedList(),
-      subject, clip;
-
-  type = type || 'difference';
-
-  // Phase 1: Identify and store intersections between the subject
-  //          and clip polygons
+Polygon.prototype.identifyIntersections = function(subjectList, clipList) {
+  var subject, clip;
   var auxs = subjectList.last();
   auxs.next = new Node(subjectList.vec, auxs);
   auxs.next.prev = auxs;
@@ -134,9 +127,10 @@ Polygon.prototype.clip = function(clipPoly, type) {
       }
     }
   }
+};
 
-  // Phase 2: walk the resulting linked list and mark each intersection
-  //          as entering or exiting
+Polygon.prototype.identifyIntersectionType = function(subjectList, clipList, clipPoly, type) {
+  var subject, clip;
   var se = this.containsPoint(subjectList.vec);
   if (type === 'union') {
     se = !se;
@@ -156,15 +150,16 @@ Polygon.prototype.clip = function(clipPoly, type) {
       ce = !ce;
     }
   }
+};
 
-  // Phase 3: collect resulting polygons
+Polygon.prototype.collectClipResults = function(subjectList, clipList) {
   subjectList.createLoop();
   clipList.createLoop();
 
-  var crt, root = null, old = null;
-  var results = [];
+  var crt, root = null, old = null, results = [], result;
+
   while ((crt = subjectList.firstNodeOfInterest()) !== subjectList) {
-    var result = []
+    result = [];
     for (; !crt.visited; crt = crt.neighbor) {
 
       result.push(crt.vec.clone());
@@ -193,6 +188,25 @@ Polygon.prototype.clip = function(clipPoly, type) {
   }
 
   return results;
+};
+
+Polygon.prototype.clip = function(clipPoly, type) {
+  var subjectList = this.createLinkedList(),
+      clipList = clipPoly.createLinkedList(),
+      subject, clip;
+
+  type = type || 'difference';
+
+  // Phase 1: Identify and store intersections between the subject
+  //          and clip polygons
+  this.identifyIntersections(subjectList, clipList);
+
+  // Phase 2: walk the resulting linked list and mark each intersection
+  //          as entering or exiting
+  this.identifyIntersectionType(subjectList, clipList, clipPoly, type);
+
+  // Phase 3: collect resulting polygons
+  return this.collectClipResults(subjectList, clipList);
 };
 
 module.exports = Polygon;
