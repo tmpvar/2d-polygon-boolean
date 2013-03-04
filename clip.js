@@ -138,7 +138,7 @@ Polygon.prototype.clip = function(clipPoly, type) {
   // Phase 2: walk the resulting linked list and mark each intersection
   //          as entering or exiting
   var se = this.containsPoint(subjectList.vec);
-  if (type === 'difference') {
+  if (type === 'union') {
     se = !se;
   }
 
@@ -149,7 +149,7 @@ Polygon.prototype.clip = function(clipPoly, type) {
     }
   }
 
-  var ce = clipPoly.containsPoint(clipList.vec);
+  var ce = !clipPoly.containsPoint(clipList.vec);
   for(clip = clipList; clip.next; clip = clip.next) {
     if(clip.intersect) {
       clip.entry = ce;
