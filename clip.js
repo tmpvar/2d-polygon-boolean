@@ -1,3 +1,6 @@
+// Implementation of the Greiner-Hormann polygon clipping algorithm
+//
+
 var Polygon = require('polygon');
 var Vec2 = require('vec2');
 var segseg = require('segseg');
@@ -71,8 +74,7 @@ Node.prototype = {
 
 };
 
-// Implementation of the Greiner-Hormann polygon clipping algorithm
-//
+
 
 
 Polygon.prototype.createLinkedList = function() {
@@ -183,7 +185,7 @@ Polygon.prototype.collectClipResults = function(subjectList, clipList) {
     var poly = Polygon(result).dedupe();
     poly.subjectList = subjectList;
     poly.clipList = clipList;
-    results.push(poly)
+    results.push(poly);
     break;
   }
 

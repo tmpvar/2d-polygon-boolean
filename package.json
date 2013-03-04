@@ -24,7 +24,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "polygon": "0.0.4",
+    "polygon": "0.0.7",
     "vec2": "~1.1.0",
     "segseg": "~0.2.0"
   }
