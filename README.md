@@ -5,6 +5,7 @@ Implementation of the Greiner-Kai "efficient clipping of arbitrary polygons" [pa
 ## install
 
 `npm install poygon.clip`
+`npm install vec2`
 
 ## use
 
@@ -20,7 +21,8 @@ Lets clip two squares
 
 ```javascript
 
-var Polygon = require('polygon.clip');
+var Polygon = require('polygon.clip'),
+    Vec2 = require('vec2');
 
 var subject = Polygon([
   Vec2(0, 0),
