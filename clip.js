@@ -165,7 +165,7 @@ Polygon.prototype.collectClipResults = function(subjectList, clipList) {
     for (; !crt.visited; crt = crt.neighbor) {
 
       result.push(crt.vec.clone());
-      var forward = !crt.entry
+      var forward = crt.entry
       while(true) {
         crt.visited = true;
         crt = forward ? crt.next : crt.prev;
