@@ -19,11 +19,10 @@ var clip = Polygon([
 ]);
 
 var clip2 = Polygon([
+  Vec2(85, 95),
   Vec2(95, 95),
   Vec2(95, 105),
-  Vec2(85, 105),
-  Vec2(85, 95),
-  Vec2(95, 95)
+  Vec2(85, 105)
 ]);
 
 describe('Polygon#clip', function() {
@@ -65,9 +64,9 @@ describe('Polygon#clip', function() {
   it('should be able to reuse polygons', function() {
     var union = subject.clip(clip, 'union')[0];
     var union2 = union.clip(clip2, 'union')[0];
-    assert.deepEqual(union.points[0].toArray(), [95, 100]);
-    assert.deepEqual(union.points[1].toArray(), [100, 100]);
-    assert.deepEqual(union.points[2].toArray(), [100, 100]);
-    assert.deepEqual(union.points[3].toArray(), [90, 90]);
+    assert.deepEqual(union2.points[0].toArray(), [95, 100]);
+    assert.deepEqual(union2.points[1].toArray(), [90, 100]);
+    assert.deepEqual(union2.points[2].toArray(), [90, 95]);
+    assert.deepEqual(union2.points[3].toArray(), [95, 95]);
   });
 });
