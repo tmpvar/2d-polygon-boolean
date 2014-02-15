@@ -158,7 +158,7 @@ Polygon.prototype.collectClipResults = function(subjectList, clipList) {
   subjectList.createLoop();
   clipList.createLoop();
 
-  var crt, root = null, old = null, results = [], result;
+  var crt, results = [], result;
 
   while ((crt = subjectList.firstNodeOfInterest()) !== subjectList) {
     result = [];
@@ -167,9 +167,6 @@ Polygon.prototype.collectClipResults = function(subjectList, clipList) {
       result.push(crt.vec.clone());
       var forward = !crt.entry
       while(true) {
-        var newNode = new Node(crt.vec);
-        newNode.next = old;
-        old = newNode;
         crt.visited = true;
         crt = forward ? crt.next : crt.prev;
 
