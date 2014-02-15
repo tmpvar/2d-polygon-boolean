@@ -5,7 +5,6 @@ Implementation of the Greiner-Kai "efficient clipping of arbitrary polygons" [pa
 ## install
 
 `npm install poygon.clip`
-`npm install vec2`
 
 ## use
 
@@ -44,6 +43,7 @@ var clip = Polygon([
 // union is an array of Polygons
 var union = subject.clip(clip, 'union');
 
+console.log(JSON.stringify(union[0].points, null, '  '));
 ```
 
 In this case, there will only be one polygon in the `union` array, and it will define the upper corner of the subject polygon
