@@ -133,7 +133,7 @@ Polygon.prototype.identifyIntersections = function(subjectList, clipList) {
 
 Polygon.prototype.identifyIntersectionType = function(subjectList, clipList, clipPoly, type) {
   var subject, clip;
-  var se = this.containsPoint(subjectList.vec);
+  var se = clipPoly.containsPoint(subjectList.vec);
   if (type === 'union') {
     se = !se;
   }
@@ -145,7 +145,7 @@ Polygon.prototype.identifyIntersectionType = function(subjectList, clipList, cli
     }
   }
 
-  var ce = !clipPoly.containsPoint(clipList.vec);
+  var ce = !this.containsPoint(clipList.vec);
   for(clip = clipList; clip.next; clip = clip.next) {
     if(clip.intersect) {
       clip.entry = ce;
@@ -158,18 +158,15 @@ Polygon.prototype.collectClipResults = function(subjectList, clipList) {
   subjectList.createLoop();
   clipList.createLoop();
 
-  var crt, root = null, old = null, results = [], result;
+  var crt, results = [], result;
 
   while ((crt = subjectList.firstNodeOfInterest()) !== subjectList) {
     result = [];
     for (; !crt.visited; crt = crt.neighbor) {
 
       result.push(crt.vec.clone());
-      var forward = !crt.entry
+      var forward = crt.entry
       while(true) {
-        var newNode = new Node(crt.vec);
-        newNode.next = old;
-        old = newNode;
         crt.visited = true;
         crt = forward ? crt.next : crt.prev;
 
