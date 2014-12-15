@@ -4,7 +4,7 @@ Implementation of the Greiner-Kai "efficient clipping of arbitrary polygons" [pa
 
 ## install
 
-`npm install poygon.clip`
+`npm install polygon.clip`
 
 ## use
 
