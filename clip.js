@@ -96,16 +96,17 @@ function distance(v1, v2) {
   return Math.sqrt(x*x + y*y);
 }
 
-function dedupe(array) {
+function clean(array) {
   var seen = {};
-  return array.filter(function trackSeen(vec) {
-    var key = vec.toString();
-    if (seen[key]) {
-      return false;
+  var cur = array.length - 1;
+  while (cur--) {
+    var c = array[cur];
+    var p = array[cur+1];
+    if (c[0] === p[0] && c[1] === p[1]) {
+      array.splice(cur, 1);
     }
-    seen[key] = true;
-    return true;
-  });
+  }
+  return array;
 }
 
 
@@ -198,7 +199,7 @@ function collectClipResults(subjectList, clipList) {
     }
 
 
-    results.push(dedupe(result));
+    results.push(clean(result));
     break;
   }
 
