@@ -14,21 +14,18 @@ var clip = [
   [110, 90],
   [110, 110],
   [90, 110],
-  [90, 9]
+  [90, 90]
 ];
 
 var clip2 = [
   [85, 95],
   [95, 95],
   [95, 105],
-  [85, 10]
+  [85, 105]
 ];
 
 test('diff polys and return the remainder of the subject', function(t) {
   var difference = clipPolygon(subject, clip, 'difference')[0];
-
-  console.log(difference)
-
   t.deepEqual(difference[0], [100, 90]);
   t.deepEqual(difference[1], [100, 0]);
   t.deepEqual(difference[2], [0, 0]);
@@ -49,6 +46,7 @@ test('return the union of `subject` and `clip`', function(t) {
 
 test('return the union of `subject` and `clip2`', function(t) {
   var union2 = clipPolygon(subject, clip2, 'union')[0];
+
   t.deepEqual(union2[0], [95, 100]);
   t.deepEqual(union2[1], [85, 100]);
   t.deepEqual(union2[2], [85, 95]);
@@ -57,7 +55,7 @@ test('return the union of `subject` and `clip2`', function(t) {
 });
 
 test('return the union of `clip` and `clip2`', function(t) {
-  var union3 = clipPolygon(clip2, 'union')[0];
+  var union3 = clipPolygon(clip, clip2, 'union')[0];
   t.deepEqual(union3[0], [90, 105]);
   t.deepEqual(union3[1], [90, 95]);
   t.deepEqual(union3[2], [95, 95]);
@@ -67,7 +65,7 @@ test('return the union of `clip` and `clip2`', function(t) {
 
 test('reuse polygons', function(t) {
   var union = clipPolygon(subject, clip, 'union')[0];
-  var union2 = union.clip(clip2, 'union')[0];
+  var union2 = clipPolygon(union, clip2, 'union')[0];
   t.deepEqual(union2[0], [95, 100]);
   t.deepEqual(union2[1], [90, 100]);
   t.deepEqual(union2[2], [90, 95]);
