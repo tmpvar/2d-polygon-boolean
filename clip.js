@@ -205,8 +205,8 @@ function clip(subjectPoly, clipPoly, type) {
 
   var subjectList = createLinkedList(subjectPoly);
   var clipList = createLinkedList(clipPoly);
-  var clipContains = preprocessPolygon(clipPoly);
-  var subjectContains = preprocessPolygon(subjectPoly);
+  var clipContains = preprocessPolygon([clipPoly]);
+  var subjectContains = preprocessPolygon([subjectPoly]);
 
   var subject, clip;
 
