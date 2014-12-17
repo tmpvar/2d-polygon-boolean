@@ -23,12 +23,11 @@
   "author": "Elijah Insua <tmpvar@gmail.com>",
   "license": "MIT",
   "readmeFilename": "README.md",
-  "peerDependencies": {
-    "vec2": "~1.4.0"
-  },
   "dependencies": {
     "segseg": "~0.2.0",
-    "tape": "~3.0.3",
     "point-in-big-polygon": "~1.0.0"
+  },
+  "devDependencies": {
+    "tape": "~3.0.3"
   }
 }
