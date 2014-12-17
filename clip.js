@@ -1,12 +1,11 @@
 // Implementation of the Greiner-Hormann polygon clipping algorithm
 //
 
-var Polygon = require('polygon');
-var Vec2 = require('vec2');
 var segseg = require('segseg');
+var preprocessPolygon = require("point-in-big-polygon")
 
 function Node(vec, alpha, intersection) {
-  this.vec = vec.clone();
+  this.vec = vec;
   this.alpha = alpha || 0;
   this.intersect = !!intersection;
 }
@@ -23,7 +22,7 @@ Node.prototype = {
   visited : false,
   alpha : 0,
 
-  nextNonIntersection : function() {
+  nextNonIntersection : function nodeNextNonIntersection() {
     var a = this;
     while(a && a.intersect) {
       a = a.next;
@@ -31,7 +30,7 @@ Node.prototype = {
     return a;
   },
 
-  last : function() {
+  last : function nodeLast() {
     var a = this;
     while (a.next && a.next !== this) {
       a = a.next;
@@ -39,13 +38,13 @@ Node.prototype = {
     return a;
   },
 
-  createLoop : function() {
+  createLoop : function nodeCreateLoop() {
     var last = this.last();
     last.prev.next = this;
     this.prev = last.prev;
   },
 
-  firstNodeOfInterest : function() {
+  firstNodeOfInterest : function nodeFirstNodeOfInterest() {
     var a = this;
 
     if (a) {
@@ -57,7 +56,7 @@ Node.prototype = {
     return a;
   },
 
-  insertBetween : function(first, last) {
+  insertBetween : function nodeInsertBetween(first, last) {
     var a = first;
     while(a !== last && a.alpha < this.alpha) {
       a = a.next;
@@ -71,16 +70,14 @@ Node.prototype = {
 
     this.next.prev = this;
   }
-
 };
 
 
-
-
-Polygon.prototype.createLinkedList = function() {
+function createLinkedList(vecs) {
+  var l = vecs.length;
   var ret, where;
-
-  this.each(function(p, current) {
+  for (var i=0; i<l; i++) {
+    var current = vecs[i];
     if (!ret) {
       where = ret = new Node(current);
     } else {
@@ -88,12 +85,31 @@ Polygon.prototype.createLinkedList = function() {
       where.next.prev = where;
       where = where.next;
     }
-  });
+  }
 
   return ret;
-};
+}
 
-Polygon.prototype.identifyIntersections = function(subjectList, clipList) {
+function distance(v1, v2) {
+  var x = v1[0] - v2[0];
+  var y = v1[1] - v2[1];
+  return Math.sqrt(x*x + y*y);
+}
+
+function dedupe(array) {
+  var seen = {};
+  return array.filter(function trackSeen(vec) {
+    var key = vec.toString();
+    if (seen[key]) {
+      return false;
+    }
+    seen[key] = true;
+    return true;
+  });
+}
+
+
+function identifyIntersections(subjectList, clipList) {
   var subject, clip;
   var auxs = subjectList.last();
   auxs.next = new Node(subjectList.vec, auxs);
@@ -116,10 +132,8 @@ Polygon.prototype.identifyIntersections = function(subjectList, clipList) {
           var i = segseg(a, b, c, d);
 
           if(i && i !== true) {
-            i = Vec2.fromArray(i);
-
-            var intersectionSubject = new Node(i.clone(), a.distance(i) / a.distance(b), true);
-            var intersectionClip = new Node(i.clone(), c.distance(i) / c.distance(d), true);
+            var intersectionSubject = new Node(i, distance(a, i) / distance(a, b), true);
+            var intersectionClip = new Node(i, distance(c, i) / distance(c, d), true);
             intersectionSubject.neighbor = intersectionClip;
             intersectionClip.neighbor = intersectionSubject;
             intersectionSubject.insertBetween(subject, subject.next.nextNonIntersection());
@@ -131,9 +145,9 @@ Polygon.prototype.identifyIntersections = function(subjectList, clipList) {
   }
 };
 
-Polygon.prototype.identifyIntersectionType = function(subjectList, clipList, clipPoly, type) {
+function identifyIntersectionType(subjectList, clipList, clipTest, subjectTest, type) {
   var subject, clip;
-  var se = clipPoly.containsPoint(subjectList.vec);
+  var se = clipTest(subjectList.vec);
   if (type === 'union') {
     se = !se;
   }
@@ -145,7 +159,7 @@ Polygon.prototype.identifyIntersectionType = function(subjectList, clipList, cli
     }
   }
 
-  var ce = !this.containsPoint(clipList.vec);
+  var ce = !subjectTest(clipList.vec);
   for(clip = clipList; clip.next; clip = clip.next) {
     if(clip.intersect) {
       clip.entry = ce;
@@ -154,7 +168,7 @@ Polygon.prototype.identifyIntersectionType = function(subjectList, clipList, cli
   }
 };
 
-Polygon.prototype.collectClipResults = function(subjectList, clipList) {
+function collectClipResults(subjectList, clipList) {
   subjectList.createLoop();
   clipList.createLoop();
 
@@ -164,7 +178,7 @@ Polygon.prototype.collectClipResults = function(subjectList, clipList) {
     result = [];
     for (; !crt.visited; crt = crt.neighbor) {
 
-      result.push(crt.vec.clone());
+      result.push(crt.vec);
       var forward = crt.entry
       while(true) {
         crt.visited = true;
@@ -179,33 +193,41 @@ Polygon.prototype.collectClipResults = function(subjectList, clipList) {
       }
     }
 
-    var poly = Polygon(result).dedupe();
-    poly.subjectList = subjectList;
-    poly.clipList = clipList;
-    results.push(poly);
+
+    results.push(dedupe(result));
     break;
   }
 
   return results;
 };
 
-Polygon.prototype.clip = function(clipPoly, type) {
-  var subjectList = this.createLinkedList(),
-      clipList = clipPoly.createLinkedList(),
-      subject, clip;
+function clip(subjectPoly, clipPoly, type) {
+
+  var subjectList = createLinkedList(subjectPoly);
+  var clipList = createLinkedList(clipPoly);
+  var clipContains = preprocessPolygon(clipPoly);
+  var subjectContains = preprocessPolygon(subjectPoly);
+
+  var subject, clip;
 
   type = type || 'difference';
 
   // Phase 1: Identify and store intersections between the subject
   //          and clip polygons
-  this.identifyIntersections(subjectList, clipList);
+  var isects = identifyIntersections(subjectList, clipList);
 
   // Phase 2: walk the resulting linked list and mark each intersection
   //          as entering or exiting
-  this.identifyIntersectionType(subjectList, clipList, clipPoly, type);
+  identifyIntersectionType(
+    subjectList,
+    clipList,
+    clipContains,
+    subjectContains,
+    type
+  );
 
   // Phase 3: collect resulting polygons
-  return this.collectClipResults(subjectList, clipList);
+  return collectClipResults(subjectList, clipList);
 };
 
-module.exports = Polygon;
+module.exports = clip;
