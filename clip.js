@@ -160,6 +160,10 @@ function identifyIntersectionType(subjectList, clipList, clipTest, subjectTest, 
   }
 
   var ce = subjectTest(clipList.vec) > 0;
+  if (type === 'union') {
+    ce = !ce;
+  }
+
   for(clip = clipList; clip.next; clip = clip.next) {
     if(clip.intersect) {
       clip.entry = ce;

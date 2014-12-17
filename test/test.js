@@ -72,3 +72,20 @@ test('reuse polygons', function(t) {
   t.deepEqual(intersection2[3], [95, 95]);
   t.end();
 });
+
+test('union polygons', function(t) {
+  var union = clipPolygon(subject, clip, 'union')[0];
+
+  t.deepEqual(union, [
+    [100, 90],
+    [100, 0],
+    [0, 0],
+    [0, 100],
+    [90, 100],
+    [90, 110],
+    [110, 110],
+    [110, 90]
+  ]);
+
+  t.end();
+});
