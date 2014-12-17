@@ -148,7 +148,7 @@ function identifyIntersections(subjectList, clipList) {
 function identifyIntersectionType(subjectList, clipList, clipTest, subjectTest, type) {
   var subject, clip;
   var se = clipTest(subjectList.vec) < 0;
-  if (type === 'union') {
+  if (type === 'intersection') {
     se = !se;
   }
 

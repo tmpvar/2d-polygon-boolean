@@ -35,27 +35,27 @@ test('diff polys and return the remainder of the subject', function(t) {
   t.end();
 });
 
-test('return the union of `subject` and `clip`', function(t) {
-  var union = clipPolygon(subject, clip, 'union')[0];
-  t.deepEqual(union[0], [100, 90]);
-  t.deepEqual(union[1], [100, 100]);
-  t.deepEqual(union[2], [90, 100]);
-  t.deepEqual(union[3], [90, 90]);
+test('return the intersection of `subject` and `clip`', function(t) {
+  var intersection = clipPolygon(subject, clip, 'intersection')[0];
+  t.deepEqual(intersection[0], [100, 90]);
+  t.deepEqual(intersection[1], [100, 100]);
+  t.deepEqual(intersection[2], [90, 100]);
+  t.deepEqual(intersection[3], [90, 90]);
   t.end();
 });
 
-test('return the union of `subject` and `clip2`', function(t) {
-  var union2 = clipPolygon(subject, clip2, 'union')[0];
+test('return the intersection of `subject` and `clip2`', function(t) {
+  var intersection = clipPolygon(subject, clip2, 'intersection')[0];
 
-  t.deepEqual(union2[0], [95, 100]);
-  t.deepEqual(union2[1], [85, 100]);
-  t.deepEqual(union2[2], [85, 95]);
-  t.deepEqual(union2[3], [95, 95]);
+  t.deepEqual(intersection[0], [95, 100]);
+  t.deepEqual(intersection[1], [85, 100]);
+  t.deepEqual(intersection[2], [85, 95]);
+  t.deepEqual(intersection[3], [95, 95]);
   t.end();
 });
 
-test('return the union of `clip` and `clip2`', function(t) {
-  var union3 = clipPolygon(clip, clip2, 'union')[0];
+test('return the intersection of `clip` and `clip2`', function(t) {
+  var union3 = clipPolygon(clip, clip2, 'intersection')[0];
   t.deepEqual(union3[0], [90, 105]);
   t.deepEqual(union3[1], [90, 95]);
   t.deepEqual(union3[2], [95, 95]);
@@ -64,11 +64,11 @@ test('return the union of `clip` and `clip2`', function(t) {
 });
 
 test('reuse polygons', function(t) {
-  var union = clipPolygon(subject, clip, 'union')[0];
-  var union2 = clipPolygon(union, clip2, 'union')[0];
-  t.deepEqual(union2[0], [95, 100]);
-  t.deepEqual(union2[1], [90, 100]);
-  t.deepEqual(union2[2], [90, 95]);
-  t.deepEqual(union2[3], [95, 95]);
+  var intersection = clipPolygon(subject, clip, 'intersection')[0];
+  var intersection2 = clipPolygon(intersection, clip2, 'intersection')[0];
+  t.deepEqual(intersection2[0], [95, 100]);
+  t.deepEqual(intersection2[1], [90, 100]);
+  t.deepEqual(intersection2[2], [90, 95]);
+  t.deepEqual(intersection2[3], [95, 95]);
   t.end();
 });
