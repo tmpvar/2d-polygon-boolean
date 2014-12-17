@@ -147,7 +147,7 @@ function identifyIntersections(subjectList, clipList) {
 
 function identifyIntersectionType(subjectList, clipList, clipTest, subjectTest, type) {
   var subject, clip;
-  var se = clipTest(subjectList.vec);
+  var se = clipTest(subjectList.vec) < 0;
   if (type === 'union') {
     se = !se;
   }
@@ -159,7 +159,7 @@ function identifyIntersectionType(subjectList, clipList, clipTest, subjectTest, 
     }
   }
 
-  var ce = !subjectTest(clipList.vec);
+  var ce = subjectTest(clipList.vec) > 0;
   for(clip = clipList; clip.next; clip = clip.next) {
     if(clip.intersect) {
       clip.entry = ce;
