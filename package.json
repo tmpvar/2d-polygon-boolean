@@ -1,6 +1,6 @@
 {
   "name": "2d-polygon-boolean",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "perform boolean operations on arbitrary polygons in 2d",
   "main": "2d-polygon-boolean.js",
   "directories": {
