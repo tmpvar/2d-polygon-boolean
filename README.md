@@ -82,10 +82,6 @@ intersect results [ [ [ 100, 90 ], [ 100, 100 ], [ 90, 100 ], [ 90, 90 ] ] ]
 */
 ```
 
-In this case, there will only be one polygon in the `union` array, and it will define the upper corner of the subject polygon
-
-`[[100, 90], [100,100], [90, 100], [90,90]]`
-
 # license
 
 [MIT](LICENSE.txt)
