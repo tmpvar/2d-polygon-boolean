@@ -204,7 +204,7 @@ function collectClipResults(subjectList, clipList) {
   return results;
 };
 
-function clip(subjectPoly, clipPoly, operation) {
+function polygonBoolean(subjectPoly, clipPoly, operation) {
 
   var subjectList = createLinkedList(subjectPoly);
   var clipList = createLinkedList(clipPoly);
@@ -231,4 +231,4 @@ function clip(subjectPoly, clipPoly, operation) {
   return collectClipResults(subjectList, clipList);
 };
 
-module.exports = clip;
+module.exports = polygonBoolean;

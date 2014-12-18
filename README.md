@@ -4,19 +4,29 @@ Implementation of the Greiner-Kai "efficient clipping of arbitrary polygons" [pa
 
 ## install
 
-`npm install polygon.clip`
+`npm install 2d-polygon-boolean`
 
 ## use
 
 ### signature
 
-`Polygon#clip(clippingPolygon, mode)`
+`var polygons = polygonBoolean(array1, array2, mode)`
 
-Where mode is `'difference'` or `'union'`
+Where mode is the string `and` (intersect), `or` (union), `not` (cut)
 
+`polygons` is an array of arrays of arrays
+
+e.g
+```javascript
+  [
+    [
+      [0, 0],
+      [0, 1],
+      [1, 1]
+    ]
+  ]
+```
 ### example
-
-Lets clip two squares
 
 ```javascript
 
@@ -78,4 +88,4 @@ In this case, there will only be one polygon in the `union` array, and it will d
 
 # license
 
-MIT
+[MIT](LICENSE.txt)
