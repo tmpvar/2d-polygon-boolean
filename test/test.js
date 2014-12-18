@@ -129,3 +129,26 @@ test('return multiple polygons (intersect)', function(t) {
 
   t.end();
 });
+
+test('union polygons (colinear side)', function(t) {
+  var union = pbool([
+    [0, 0],
+    [1, 0],
+    [1, 1],
+    [0, 1]
+  ], [
+    [1, 0],
+    [2, 0],
+    [2, 1],
+    [1, 1]
+  ], 'or')[0];
+
+  t.deepEqual(union, [
+    [0, 0]
+    [2, 0]
+    [2, 1]
+    [0, 1]
+  ]);
+
+  t.end();
+});
