@@ -89,3 +89,43 @@ test('union polygons', function(t) {
 
   t.end();
 });
+
+test('return multiple polygons (intersect)', function(t) {
+  var a = [
+    [ 0,  0],
+    [60,  0],
+    [60, 30],
+    [40, 30],
+    [40, 10],
+    [20, 10],
+    [20, 30],
+    [0, 30]
+  ];
+
+  var b = [
+    [-10, 15],
+    [70, 15],
+    [70, 25],
+    [-20, 25]
+  ];
+
+  var i = clipPolygon(a, b, 'intersection');
+
+  t.equal(i.length, 2);
+
+  t.deepEqual(i[0], [
+    [60, 15],
+    [60, 25],
+    [40, 25],
+    [40, 15]
+  ]);
+
+  t.deepEqual(i[1], [
+    [20, 15],
+    [20, 25],
+    [0, 25],
+    [0, 15]
+  ]);
+
+  t.end();
+});
