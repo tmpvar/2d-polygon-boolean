@@ -1,5 +1,5 @@
 var test = require('tape');
-var clipPolygon = require('../clip');
+var pbool = require('../2d-polygon-boolean');
 
 var subject = [
   [0, 0],
@@ -25,7 +25,7 @@ var clip2 = [
 ];
 
 test('diff polys and return the remainder of the subject', function(t) {
-  var difference = clipPolygon(subject, clip, 'difference')[0];
+  var difference = pbool(subject, clip, 'not')[0];
   t.deepEqual(difference[0], [100, 90]);
   t.deepEqual(difference[1], [100, 0]);
   t.deepEqual(difference[2], [0, 0]);
@@ -36,7 +36,7 @@ test('diff polys and return the remainder of the subject', function(t) {
 });
 
 test('return the intersection of `subject` and `clip`', function(t) {
-  var intersection = clipPolygon(subject, clip, 'intersection')[0];
+  var intersection = pbool(subject, clip, 'and')[0];
   t.deepEqual(intersection[0], [100, 90]);
   t.deepEqual(intersection[1], [100, 100]);
   t.deepEqual(intersection[2], [90, 100]);
@@ -45,7 +45,7 @@ test('return the intersection of `subject` and `clip`', function(t) {
 });
 
 test('return the intersection of `subject` and `clip2`', function(t) {
-  var intersection = clipPolygon(subject, clip2, 'intersection')[0];
+  var intersection = pbool(subject, clip2, 'and')[0];
 
   t.deepEqual(intersection[0], [95, 100]);
   t.deepEqual(intersection[1], [85, 100]);
@@ -55,7 +55,7 @@ test('return the intersection of `subject` and `clip2`', function(t) {
 });
 
 test('return the intersection of `clip` and `clip2`', function(t) {
-  var union3 = clipPolygon(clip, clip2, 'intersection')[0];
+  var union3 = pbool(clip, clip2, 'and')[0];
   t.deepEqual(union3[0], [90, 105]);
   t.deepEqual(union3[1], [90, 95]);
   t.deepEqual(union3[2], [95, 95]);
@@ -64,8 +64,8 @@ test('return the intersection of `clip` and `clip2`', function(t) {
 });
 
 test('reuse polygons', function(t) {
-  var intersection = clipPolygon(subject, clip, 'intersection')[0];
-  var intersection2 = clipPolygon(intersection, clip2, 'intersection')[0];
+  var intersection = pbool(subject, clip, 'and')[0];
+  var intersection2 = pbool(intersection, clip2, 'and')[0];
   t.deepEqual(intersection2[0], [95, 100]);
   t.deepEqual(intersection2[1], [90, 100]);
   t.deepEqual(intersection2[2], [90, 95]);
@@ -74,7 +74,7 @@ test('reuse polygons', function(t) {
 });
 
 test('union polygons', function(t) {
-  var union = clipPolygon(subject, clip, 'union')[0];
+  var union = pbool(subject, clip, 'or')[0];
 
   t.deepEqual(union, [
     [100, 90],
@@ -109,7 +109,7 @@ test('return multiple polygons (intersect)', function(t) {
     [-20, 25]
   ];
 
-  var i = clipPolygon(a, b, 'intersection');
+  var i = pbool(a, b, 'and');
 
   t.equal(i.length, 2);
 

@@ -149,7 +149,7 @@ function identifyIntersections(subjectList, clipList) {
 function identifyIntersectionType(subjectList, clipList, clipTest, subjectTest, type) {
   var subject, clip;
   var se = clipTest(subjectList.vec) < 0;
-  if (type === 'intersection') {
+  if (type === 'and') {
     se = !se;
   }
 
@@ -161,7 +161,7 @@ function identifyIntersectionType(subjectList, clipList, clipTest, subjectTest, 
   }
 
   var ce = subjectTest(clipList.vec) > 0;
-  if (type === 'union') {
+  if (type === 'or') {
     ce = !ce;
   }
 
@@ -204,7 +204,7 @@ function collectClipResults(subjectList, clipList) {
   return results;
 };
 
-function clip(subjectPoly, clipPoly, type) {
+function clip(subjectPoly, clipPoly, operation) {
 
   var subjectList = createLinkedList(subjectPoly);
   var clipList = createLinkedList(clipPoly);
@@ -212,8 +212,6 @@ function clip(subjectPoly, clipPoly, type) {
   var subjectContains = preprocessPolygon([subjectPoly]);
 
   var subject, clip;
-
-  type = type || 'difference';
 
   // Phase 1: Identify and store intersections between the subject
   //          and clip polygons
@@ -226,7 +224,7 @@ function clip(subjectPoly, clipPoly, type) {
     clipList,
     clipContains,
     subjectContains,
-    type
+    operation
   );
 
   // Phase 3: collect resulting polygons

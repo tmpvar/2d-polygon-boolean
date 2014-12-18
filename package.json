@@ -1,8 +1,8 @@
 {
-  "name": "polygon.clip",
+  "name": "2d-polygon-boolean",
   "version": "0.0.3",
-  "description": "clip a polygon with another",
-  "main": "clip.js",
+  "description": "perform boolean operations on arbitrary polygons in 2d",
+  "main": "2d-polygon-boolean.js",
   "directories": {
     "test": "test"
   },

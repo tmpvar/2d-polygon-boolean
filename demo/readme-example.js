@@ -1,23 +1,26 @@
-var Polygon = require('../clip.js'),
-    Vec2 = require('vec2');
+var polygonBoolean = require('../2d-polygon-boolean');
 
-var subject = Polygon([
-  Vec2(0, 0),
-  Vec2(100, 0),
-  Vec2(100, 100),
-  Vec2(0, 100),
-  Vec2(0, 0)
-]);
+var subject = [
+  [0, 0],
+  [100, 0],
+  [100, 100],
+  [0, 100]
+];
 
-var clip = Polygon([
-  Vec2(90, 90),
-  Vec2(110, 90),
-  Vec2(110, 110),
-  Vec2(90, 110),
-  Vec2(90, 90)
-]);
+var clip = [
+  [90, 90],
+  [110, 90],
+  [110, 110],
+  [90, 110],
+  [90, 90]
+];
 
 
-// union is an array of Polygons
-var union = subject.clip(clip, 'union');
-console.log(JSON.stringify(union[0].points, null, '  '));
+var union = polygonBoolean(subject, clip, 'or');
+console.log('union results', union);
+
+var cut = polygonBoolean(subject, clip, 'not');
+console.log('cut results', cut);
+
+var intersect = polygonBoolean(subject, clip, 'and');
+console.log('intersect results', intersect);
