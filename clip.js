@@ -198,9 +198,7 @@ function collectClipResults(subjectList, clipList) {
       }
     }
 
-
     results.push(clean(result));
-    break;
   }
 
   return results;
