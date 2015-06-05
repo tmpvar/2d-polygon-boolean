@@ -7,6 +7,15 @@ var area = require('2d-polygon-area');
 var sign = require('signum');
 var abs = Math.abs;
 
+function copy(a) {
+  var l = a.length;
+  var out = new Array(l);
+  for (var i = 0; i<l; i++) {
+    out[i] = a[i].slice();
+  }
+  return out;
+}
+
 function Node(vec, alpha, intersection) {
   this.vec = vec;
   this.alpha = alpha || 0;
@@ -249,28 +258,28 @@ function polygonBoolean(subjectPoly, clipPoly, operation) {
     switch (operation) {
       case 'or':
         if (!inner && !outer) {
-          res.push(subjectPoly.slice());
-          res.push(clipPoly.slice());
+          res.push(copy(subjectPoly));
+          res.push(copy(clipPoly));
         } else if (inner) {
-          res.push(clipPoly.slice());
+          res.push(copy(clipPoly));
         } else if (outer) {
-          res.push(subjectPoly.slice());
+          res.push(copy(subjectPoly));
         }
       break;
 
       case 'and':
         if (inner) {
-          res.push(subjectPoly.slice())
+          res.push(copy(subjectPoly))
         } else if (outer) {
-          res.push(clipPoly.slice());
+          res.push(copy(clipPoly));
         } else {
           throw new Error('woops')
         }
       break;
 
       case 'not':
-        var sclone = subjectPoly.slice();
-        var cclone = clipPoly.slice();
+        var sclone = copy(subjectPoly);
+        var cclone = copy(clipPoly);
 
         var sarea = area(sclone);
         var carea = area(cclone);

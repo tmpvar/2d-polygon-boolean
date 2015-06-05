@@ -159,7 +159,7 @@ test('containment - union - subject container', function(t) {
 
   var union = pbool(a, b, 'or')
   t.deepEqual(union[0], a, 'just return the outside');
-  t.ok(a !== union[0], 'creates a copy')
+  t.ok(a[0] !== union[0][0], 'creates a copy')
 
   t.end();
 });
@@ -170,7 +170,7 @@ test('containment - union - clip container', function(t) {
 
   var union = pbool(b, a, 'or')
   t.deepEqual(union[0], a, 'just return the outside');
-  t.ok(a !== union[0], 'creates a copy')
+  t.ok(a[0] !== union[0][0], 'creates a copy')
 
   t.end();
 });
@@ -181,8 +181,8 @@ test('no-intersection - union', function(t) {
 
   var union = pbool(a, b, 'or')
   t.deepEqual(union, [a, b], 'return both');
-  t.ok(a !== union[0], 'creates a copy')
-  t.ok(b !== union[1], 'creates a copy')
+  t.ok(a[0] !== union[0][0], 'creates a copy')
+  t.ok(b[0] !== union[1][0], 'creates a copy')
 
   t.end();
 });
@@ -193,7 +193,7 @@ test('containment - and - subject container', function(t) {
 
   var and = pbool(a, b, 'and')
   t.deepEqual(b, and[0], 'just return the inside');
-  t.ok(b !== and[0], 'creates a copy')
+  t.ok(b[0] !== and[0][0], 'creates a copy')
 
   t.end();
 });
@@ -204,7 +204,7 @@ test('containment - and - clip container', function(t) {
 
   var and = pbool(b, a, 'and')
   t.deepEqual(b, and[0], 'just return the inside');
-  t.ok(b !== and[0], 'creates a copy')
+  t.ok(b[0] !== and[0][0], 'creates a copy')
 
   t.end();
 });
@@ -213,9 +213,9 @@ test('containment - not - subject container', function(t) {
   var a = [[0, 0], [100, 0], [100, 100], [0, 100]];
   var b = [[10, 10], [20, 10], [20, 20], [10, 20]];
 
-  var and = pbool(a, b, 'not')
-  t.deepEqual([a, b.reverse()], and, 'return both');
-  t.ok(b !== and[0], 'creates a copy')
+  var not = pbool(a, b, 'not')
+  t.deepEqual([a, b.reverse()], not, 'return both');
+  t.ok(b[0] !== not[1][0], 'creates a copy')
 
   t.end();
 });
@@ -224,9 +224,9 @@ test('containment - not - subject container', function(t) {
   var a = [[0, 0], [100, 0], [100, 100], [0, 100]];
   var b = [[10, 10], [20, 10], [20, 20], [10, 20]];
 
-  var and = pbool(b, a, 'not')
-  t.deepEqual([a, b.reverse()], and, 'return both');
-  t.ok(b !== and[0], 'creates a copy')
+  var not = pbool(b, a, 'not')
+  t.deepEqual([a, b.reverse()], not, 'return both');
+  t.ok(b[0] !== not[1][0], 'creates a copy')
 
   t.end();
 });
