@@ -252,6 +252,16 @@ function polygonBoolean(subjectPoly, clipPoly, operation) {
           res.push(subjectPoly.slice());
         }
       break;
+
+      case 'and':
+        if (inner) {
+          res.push(subjectPoly.slice())
+        } else if (outer) {
+          res.push(clipPoly.slice());
+        } else {
+          throw new Error('woops')
+        }
+      break;
     }
   }
 
