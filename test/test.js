@@ -152,3 +152,37 @@ test('union polygons (colinear side)', function(t) {
 
   t.end();
 });
+
+test('containment - union - subject container', function(t) {
+  var a = [[0, 0], [100, 0], [100, 100], [0, 100]];
+  var b = [[10, 10], [20, 10], [20, 20], [10, 20]];
+
+  var union = pbool(a, b, 'or')
+  t.deepEqual(union[0], a, 'just return the outside');
+  t.ok(a !== union[0], 'creates a copy')
+
+  t.end();
+});
+
+test('containment - union - clip container', function(t) {
+  var a = [[0, 0], [100, 0], [100, 100], [0, 100]];
+  var b = [[10, 10], [20, 10], [20, 20], [10, 20]];
+
+  var union = pbool(b, a, 'or')
+  t.deepEqual(union[0], a, 'just return the outside');
+  t.ok(a !== union[0], 'creates a copy')
+
+  t.end();
+});
+
+test('no-intersection - union', function(t) {
+  var a = [[0, 0], [5, 0], [5, 5], [0, 5]];
+  var b = [[20, 10], [20, 10], [20, 20], [10, 20]];
+
+  var union = pbool(a, b, 'or')
+  t.deepEqual(union, [a, b], 'return both');
+  t.ok(a !== union[0], 'creates a copy')
+  t.ok(b !== union[1], 'creates a copy')
+
+  t.end();
+});

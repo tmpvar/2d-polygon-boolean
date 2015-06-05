@@ -120,6 +120,7 @@ function identifyIntersections(subjectList, clipList) {
   auxc.next = new Node(clipList.vec, auxc);
   auxc.next.prev = auxc;
 
+  var found = false;
   for(subject = subjectList; subject.next; subject = subject.next) {
     if(!subject.intersect) {
       for(clip = clipList; clip.next; clip = clip.next) {
@@ -133,6 +134,7 @@ function identifyIntersections(subjectList, clipList) {
           var i = segseg(a, b, c, d);
 
           if(i && i !== true) {
+            found = true;
             var intersectionSubject = new Node(i, distance(a, i) / distance(a, b), true);
             var intersectionClip = new Node(i, distance(c, i) / distance(c, d), true);
             intersectionSubject.neighbor = intersectionClip;
@@ -144,6 +146,8 @@ function identifyIntersections(subjectList, clipList) {
       }
     }
   }
+
+  return found;
 };
 
 function identifyIntersectionType(subjectList, clipList, clipTest, subjectTest, type) {
@@ -211,24 +215,48 @@ function polygonBoolean(subjectPoly, clipPoly, operation) {
   var clipContains = preprocessPolygon([clipPoly]);
   var subjectContains = preprocessPolygon([subjectPoly]);
 
-  var subject, clip;
+  var subject, clip, res;
 
   // Phase 1: Identify and store intersections between the subject
   //          and clip polygons
   var isects = identifyIntersections(subjectList, clipList);
 
-  // Phase 2: walk the resulting linked list and mark each intersection
-  //          as entering or exiting
-  identifyIntersectionType(
-    subjectList,
-    clipList,
-    clipContains,
-    subjectContains,
-    operation
-  );
+  if (isects) {
+    // Phase 2: walk the resulting linked list and mark each intersection
+    //          as entering or exiting
+    identifyIntersectionType(
+      subjectList,
+      clipList,
+      clipContains,
+      subjectContains,
+      operation
+    );
 
-  // Phase 3: collect resulting polygons
-  return collectClipResults(subjectList, clipList);
+    // Phase 3: collect resulting polygons
+    res = collectClipResults(subjectList, clipList);
+  } else {
+    // No intersections
+
+    var inner = clipContains(subjectPoly[0]) < 0;
+    var outer = subjectContains(clipPoly[0]) < 0;
+
+    res = [];
+    switch (operation) {
+      case 'or':
+        if (!inner && !outer) {
+          res.push(subjectPoly.slice());
+          res.push(clipPoly.slice());
+        } else if (inner) {
+          res.push(clipPoly.slice());
+        } else if (outer) {
+          res.push(subjectPoly.slice());
+        }
+      break;
+    }
+  }
+
+
+  return res;
 };
 
 module.exports = polygonBoolean;
