@@ -1,6 +1,6 @@
-# polygon.clip
+# 2d-polygon-boolean
 
-Implementation of the Greiner-Kai "efficient clipping of arbitrary polygons" [paper](http://www.inf.usi.ch/hormann/papers/Greiner.1998.ECO.pdf)
+Implementation of the Greiner-Hormann "efficient clipping of arbitrary polygons" [paper](http://www.inf.usi.ch/hormann/papers/Greiner.1998.ECO.pdf)
 
 ## install
 
