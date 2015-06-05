@@ -208,3 +208,25 @@ test('containment - and - clip container', function(t) {
 
   t.end();
 });
+
+test('containment - not - subject container', function(t) {
+  var a = [[0, 0], [100, 0], [100, 100], [0, 100]];
+  var b = [[10, 10], [20, 10], [20, 20], [10, 20]];
+
+  var and = pbool(a, b, 'not')
+  t.deepEqual([a, b.reverse()], and, 'return both');
+  t.ok(b !== and[0], 'creates a copy')
+
+  t.end();
+});
+
+test('containment - not - subject container', function(t) {
+  var a = [[0, 0], [100, 0], [100, 100], [0, 100]];
+  var b = [[10, 10], [20, 10], [20, 20], [10, 20]];
+
+  var and = pbool(b, a, 'not')
+  t.deepEqual([a, b.reverse()], and, 'return both');
+  t.ok(b !== and[0], 'creates a copy')
+
+  t.end();
+});

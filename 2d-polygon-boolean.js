@@ -2,7 +2,10 @@
 //
 
 var segseg = require('segseg');
-var preprocessPolygon = require("point-in-big-polygon")
+var preprocessPolygon = require("point-in-big-polygon");
+var area = require('2d-polygon-area');
+var sign = require('signum');
+var abs = Math.abs;
 
 function Node(vec, alpha, intersection) {
   this.vec = vec;
@@ -240,6 +243,8 @@ function polygonBoolean(subjectPoly, clipPoly, operation) {
     var inner = clipContains(subjectPoly[0]) < 0;
     var outer = subjectContains(clipPoly[0]) < 0;
 
+    // TODO: slice will not copy the vecs
+
     res = [];
     switch (operation) {
       case 'or':
@@ -262,9 +267,32 @@ function polygonBoolean(subjectPoly, clipPoly, operation) {
           throw new Error('woops')
         }
       break;
+
+      case 'not':
+        var sclone = subjectPoly.slice();
+        var cclone = clipPoly.slice();
+
+        var sarea = area(sclone);
+        var carea = area(cclone);
+        if (sign(sarea) === sign(carea)) {
+          if (outer) {
+            cclone.reverse();
+          } else if (inner) {
+            sclone.reverse();
+          }
+        }
+
+        res.push(sclone);
+
+        if (abs(sarea) > abs(carea)) {
+          res.push(cclone);
+        } else {
+          res.unshift(cclone);
+        }
+
+      break
     }
   }
-
 
   return res;
 };

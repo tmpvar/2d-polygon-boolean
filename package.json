@@ -24,8 +24,10 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
+    "2d-polygon-area": "^1.0.0",
+    "point-in-big-polygon": "~1.0.0",
     "segseg": "~0.2.0",
-    "point-in-big-polygon": "~1.0.0"
+    "signum": "^1.0.0"
   },
   "devDependencies": {
     "tape": "~3.0.3",
